@@ -2,7 +2,7 @@
 An open-source benchmark for generating Verification Suites using UVM with natural language
 
 The Directory Tree is as shown below
-
+```
 Verif-LLM
 ├── designs
 │   ├── accu
@@ -37,6 +37,7 @@ Verif-LLM
     ├── uvm_sequencer.py
     ├── uvm_test.py
     └── uvm_transaction.py
+```
 
 #### 1. Getting Started
 
