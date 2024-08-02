@@ -4,7 +4,7 @@
 BASE_DIR = ../..
 
 PYTHON = python3
-SCRIPT = $(BASE_DIR)/srcs/run_main.py
+SCRIPT = $(BASE_DIR)/scripts/run_main.py
 ARGS = -sv 
 
 OPTS = -npi_nl_rtl_opt DetailRTL+DetailMux+GenBlock
