@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+
+# Visual Studio Code
+.vscode/
+
+# Coverage
+htmlcov/
+
+# SystemVerilog / UVM
+*.pb
+*.wlf
+*.vcd
+*.ucdb
+*.d
+*.svf
+*.sv
+*.vp
+*.hex
+*.fsdb
+*.vdb
+
+# Synopsys VCS
+csrc
+DVEfiles
+inter.vpd
+vcdplus.vpd
+
+# Generated directories and files
+simv
+simv.daidir/
+.daidir/
+.vsim/
+.vcsmx/
+.vcsmx_rebuild/
+.scs/
+.csrc/
+.vh/
+.vh.*
+.ucli.key
+.rg/
+
+# Temporary files
+*~
+*.tmp
+*.backup
+*.bak
+*.swp
+.DS_Store
+
+# Autogen
+npiLog/
+
+# Other
+.idea/
+*.log
+*.dat
+*.rpt
+*.jou
+*.str
+*.cmd
+*.tar
+*.tgz
+*.zip
+*.tar.gz
+*.gz
