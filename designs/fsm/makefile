@@ -29,6 +29,7 @@ all: build
 
 build:
 		$(SCRIPT) $(ARGS) $(FILE_LIST) $(OPTS)
+		rm -rf npiLog
 
 vcs:
 		vcs -sverilog +v2k -timescale=1ns/1ns       \
@@ -46,6 +47,6 @@ clean_build:
 			rm -rf __pycache__
 			rm -f *.sv
 			rm -rf *.f
-			rm -rf *_classes
+
 clean_sim:
 		rm -rf *.log  csrc  simv*  *.key *.vpd  DVEfiles coverage *.vdb output.txt
