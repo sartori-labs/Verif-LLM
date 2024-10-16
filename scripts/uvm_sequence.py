@@ -79,6 +79,6 @@ class UVMSequemceGenerator:
         return terminate_code
 
     def write_sequence_file(self):
-        sequence_filename = f"{self.module_name}_classes/sequence.sv"
+        sequence_filename = f"testbench/sequence.sv"
         with open(sequence_filename, 'w') as file:
             file.write(self.sequence_code)

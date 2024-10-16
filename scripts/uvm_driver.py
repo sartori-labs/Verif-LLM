@@ -69,6 +69,6 @@ class UVMDriverGenerator:
         return terminate_code
 
     def write_driver_file(self):
-        driver_filename = f"{self.module_name}_classes/driver.sv"
+        driver_filename = f"testbench/driver.sv"
         with open(driver_filename, 'w') as file:
             file.write(self.driver_code)

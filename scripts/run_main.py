@@ -168,7 +168,7 @@ if __name__ == '__main__':
         # print(ports)
         # print("\n")
         if module_name in required_modules:
-            directory_name = module_name + "_classes"
+            directory_name = "testbench"
             if not os.path.exists(directory_name):
                 # Create the directory
                 os.mkdir(directory_name)

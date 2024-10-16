@@ -57,6 +57,6 @@ class UVMScoreboardGenerator:
         return terminate_code
 
     def write_scoreboard_file(self):
-        scoreboard_filename = f"{self.module_name}_classes/scoreboard.sv"
+        scoreboard_filename = f"testbench/scoreboard.sv"
         with open(scoreboard_filename, 'w') as file:
             file.write(self.scoreboard_code)

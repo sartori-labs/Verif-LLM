@@ -92,6 +92,6 @@ class UVMTestGenerator:
         return terminate_code
 
     def write_test_file(self):
-        test_filename = f"{self.module_name}_classes/test.sv"
+        test_filename = f"testbench/test.sv"
         with open(test_filename, 'w') as file:
             file.write(self.test_code)

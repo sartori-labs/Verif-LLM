@@ -69,6 +69,6 @@ class UVMAgentGenerator:
         return terminate_code
 
     def write_agent_file(self):
-        agent_filename = f"{self.module_name}_classes/agent.sv"
+        agent_filename = f"testbench/agent.sv"
         with open(agent_filename, 'w') as file:
             file.write(self.agent_code)

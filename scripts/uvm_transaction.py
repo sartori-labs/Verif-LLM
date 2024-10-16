@@ -72,6 +72,6 @@ class UVMTransactionGenerator:
         return terminate_code
 
     def write_trans_file(self):
-        trans_filename = f"{self.module_name}_classes/transaction.sv"
+        trans_filename = f"testbench/transaction.sv"
         with open(trans_filename, 'w') as file:
             file.write(self.trans_code)

@@ -71,6 +71,6 @@ class UVMEnvironmentGenerator:
         return terminate_code
 
     def write_environment_file(self):
-        environment_filename = f"{self.module_name}_classes/environment.sv"
+        environment_filename = f"testbench/environment.sv"
         with open(environment_filename, 'w') as file:
             file.write(self.environment_code)

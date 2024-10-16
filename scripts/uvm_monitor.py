@@ -69,6 +69,6 @@ class UVMMonitorGenerator:
         return terminate_code
 
     def write_monitor_file(self):
-        monitor_filename = f"{self.module_name}_classes/monitor.sv"
+        monitor_filename = f"testbench/monitor.sv"
         with open(monitor_filename, 'w') as file:
             file.write(self.monitor_code)
