@@ -32,21 +32,19 @@ build:
 		rm -rf npiLog
 
 vcs:
-		vcs -sverilog +v2k -timescale=1ns/1ns       \
-		-debug_all         							\
-		-l compile.log 								\
-		${TEST_DESIGN}.v testbench.v
+		vcs -cm line+cond+fsm+branch+tgl -Mupdate +v2k -sverilog -timescale=1ns/10ps	\
+		+incdir+$$UVM_HOME/src $$UVM_HOME/src/uvm.sv $$UVM_HOME/src/dpi/uvm_dpi.cc		\
+		-l compile.log -debug_acc+all -CFLAGS -DVCS top.sv ./dut/$(TEST_DESIGN).v $(TEST_DESIGN)_if.sv		\
+		+vcs+dumpvars+verilog.vpd
 
 sim:
-		./simv -l run.log
+		./simv -cm line+cond+fsm+branch+tgl -l run.log 
 
 clean: clean_build clean_sim
 
 clean_build:
 			rm -rf npiLog
 			rm -rf __pycache__
-			rm -f *.sv
-			rm -rf *.f
 
 clean_sim:
-		rm -rf *.log  csrc  simv*  *.key *.vpd  DVEfiles coverage *.vdb output.txt
+		rm -rf *.log  csrc *.h simv* *.key *.vpd  DVEfiles coverage *.vcs *.vcd *.vdb output.txt .fsm.sch.verilog.xml
