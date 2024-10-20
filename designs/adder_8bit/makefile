@@ -48,7 +48,7 @@ euclide: vcs
 
 vcs:
 		vcs $(EUCLIDE_SWITCH) \
-		-cm line+cond+fsm+branch+tgl -Mupdate +v2k -sverilog -timescale=1ns/10ps \
+		-cm line+cond+fsm+branch+assert+tgl -Mupdate +v2k -sverilog -timescale=1ns/10ps \
 		+incdir+$(UVM_HOME)/src \
 		${UVM_HOME}/src/uvm.sv \
 		${UVM_HOME}/src/dpi/uvm_dpi.cc \
@@ -57,7 +57,12 @@ vcs:
 		+vcs+dumpvars+verilog.vpd $(EUCLIDE_ARGS)
 
 sim:
-		./simv -cm line+cond+fsm+branch+tgl -l run.log 
+		./simv -cm line+cond+fsm+branch+assert+tgl -l run.log 
+
+coverage_report:
+		urg -dir simv.vdb -format text -show ratios
+		cat urgReport/dashboard.txt
+
 
 clean: clean_build clean_sim
 
