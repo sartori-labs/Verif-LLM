@@ -66,8 +66,23 @@ sim: ## runs VCS simulation
 		./simv -cm line+cond+fsm+branch+assert+tgl -l run.log 
 
 coverage_report: ## runs VCS coverage report
-		urg -dir simv.vdb -format text -show ratios
-		cat urgReport/dashboard.txt
+		urg -full64 \
+			-dir simv.vdb \
+			-format text \
+			-show ratios \
+			-xml_verbose \
+			-xmlplan \
+			-warn none \
+
+coverage_summary: # grabs summary information from a coverage run
+	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="Toggle"]/@value' urgReport/session.xml | awk -F\" '{ print "Toggle " $$2 }' | sed 's/XPath set is empty/Toggle None/g'
+	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="Cond"]/@value' urgReport/session.xml | awk -F\" '{ print "Cond " $$2 }' | sed 's/XPath set is empty/Cond None/g'
+	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="Line"]/@value' urgReport/session.xml | awk -F\" '{ print "Line " $$2 }' | sed 's/XPath set is empty/Line None/g'
+	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="FSM"]/@value' urgReport/session.xml | awk -F\" '{ print "FSM " $$2 }' | sed 's/XPath set is empty/FSM None/g'
+	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="Branch"]/@value' urgReport/session.xml | awk -F\" '{ print "Branch " $$2 }' | sed 's/XPath set is empty/Branch None/g'
+#	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="Assert"]/@value' urgReport/session.xml | awk -F\" '{ print $$2 }' | sed s/XPath set is empty//g
+	@xmllint --xpath '/session/old_coverage/scope[@type="Groups"]/attr[@type="Group Summary"]/@value' urgReport/session.xml | awk -F\" '{ print "CoverGroup " $$2 }' | sed 's/XPath set is empty/CoverGroup None/g'
+	@xmllint --xpath '/session/old_coverage/scope[@name="Statistics"]/scorelist[1]/score[@name="Assert"]/@value' urgReport/session.xml | awk -F\" '{ print "Assert " $$2 }' | sed 's/XPath set is empty/Assert None/g'
 
 clean: clean_build clean_sim clean_euclide
 clean: ## does clean_build, clean_sim and clean_euclide
