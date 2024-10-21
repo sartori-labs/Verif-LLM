@@ -1,6 +1,6 @@
 BASE_DIR = ../..
 
-UVM_HOME = ${VCS_HOME}/etc/uvm-1.2/
+UVM_HOME = ${VCS_HOME}/etc/uvm-1.2
 
 PYTHON = python3
 SCRIPT = $(BASE_DIR)/scripts/run_main.py
