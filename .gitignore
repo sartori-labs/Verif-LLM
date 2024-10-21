@@ -64,3 +64,6 @@ npiLog/
 *.zip
 *.tar.gz
 *.gz
+
+# Synopsys Euclide
+design/workspace/
