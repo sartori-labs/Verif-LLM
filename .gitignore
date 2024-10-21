@@ -14,7 +14,6 @@ htmlcov/
 *.ucdb
 *.d
 *.svf
-*.sv
 *.vp
 *.hex
 *.fsdb
