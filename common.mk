@@ -29,7 +29,11 @@ FILE_LIST = $(V_FILES) $(SV_FILES) $(VHD_FILES)
 # switches to enable the VCS command line to launch in Synopsys Euclide IDE
 EUCLIDE_SWITCH =
 EUCLIDE_ARGS =
-EUCLIDE_VSCODE =
+EUCLIDE_VSCODE = -vscode
+# EUCLIDE_VSCODE = 
+
+# this is the directory of the library to bring in
+TRIAL = VERIF
 
 help: ## lists the self documenting help file commands
 		@echo ''
@@ -47,14 +51,19 @@ euclide: EUCLIDE_SWITCH = -euclide
 euclide: EUCLIDE_ARGS = -euclide_args \
 		$(EUCLIDE_VSCODE) \
 		-project_location . -workspace ../workspace \
-		-cud_entry "-property -r -ruleset ignore_all ${UVM_HOME}" -end_euclide_args
+		-cud_entry "-property -r -ruleset ignore_all ${UVM_HOME}" \
+		-cud_entry "user.cud" \
+		-end_euclide_args
 euclide: vcs
 euclide: ## runs the "vcs" target with modification to run Synopsys EUCLIDE IDE
 
 vcs: ## builds VCS simulation
 		vcs $(EUCLIDE_SWITCH) \
+		+define+$(TRIAL) \
 		-cm line+cond+fsm+branch+assert+tgl -Mupdate +v2k -sverilog -timescale=1ns/10ps \
 		+incdir+$(UVM_HOME)/src \
+		-kdb \
+		-debug_access+all \
 		-full64 \
 		${UVM_HOME}/src/uvm.sv \
 		${UVM_HOME}/src/dpi/uvm_dpi.cc \

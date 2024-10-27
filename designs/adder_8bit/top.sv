@@ -1,9 +1,15 @@
 `include "uvm_macros.svh"
 import uvm_pkg::*;
 
-// `ifdef VERIFIED
+`ifdef VERIFIED
 `include "./testbench/adder_8bit_pkg.sv"
-// `endif
+`endif
+
+`ifdef p7
+`include "./testbench/p7/adder_8bit_pkg.sv"
+`endif
+
+
 module top;
 
     import adder_8bit_pkg::*;
