@@ -1,0 +1,53 @@
+Please act as a professional verification engineer.
+
+Implement a UVM suite to verify an 8-bit adder. The Design Under Test has the following
+
+Module name:  
+    adder_8bit               
+Input ports:
+	a [7:0]: 8-bit input a
+	b [7:0]: 8-bit input b
+	cin: 1-bit input carry 
+Output ports:
+    sum [7:0]: 8-bit output sum
+    cout : 1-bit output carry   
+
+Interface is already defined using the above ports and is called adder_8bit_if().
+
+Implementation: All classes should have a constructor and utility macros.
+    transaction.sv - class adder_8bit_trans -  all inputs are randomized bit, outputs are just bits. Define Field macros for these I/O
+    sequence.sv -   class adder_8bit_sequence
+                    task pre_body() - if(starting_phase != null) starting_phase.raise_objection, 
+                    task body() - generate sequences to get high functional coverage 
+                    task post_body - if(starting_phase != null) starting_phase.drop_objection
+    sequencer.sv - class adder_8bit_sequencer
+    driver.sv - class adder_8bit_driver
+                declare virtual interface, uvm_analysis_port, transaction
+                initialize uvm_analysis_port in constructor
+                build_phase - get virtual interface (vif) from db, throw fatal 
+                task run_phase - get_next_item(trans), write transaction to uvm_analysis_port, item_done()
+    monitor.sv - class adder_8bit_monitor 
+                declare virtual interface, uvm_analysis_port, transaction
+                initialize uvm_analysis_port and transaction in constructor
+                build_phase - get virtual interface (vif) from db, throw fatal 
+                task run_phase - write trans to the uvm_analysis_port
+    agent.sv - class adder_8bit_agent
+                declare virtual interface, driver, monitor and sequencer
+                build_phase - get virtual interface (vif) from db, throw fatal and type_id create for driver, monitor and sequencer
+                connect_phase - driver.seq_item_port.connect(sequencer.seq_item_export)
+    scoreboard.sv - class adder_8bit_scoreboard
+                    declare uvm_analysis_imp (trans, scoreboard) 
+                    function write - do comparison of expected and actual results
+    environment.sv - class adder_8bit_env 
+                    declare agent, scoreboard, uvm_analysis_export
+                    initialize uvm_analysis_export in constructor
+                    build_phase - type_id create agent and scoreboard
+                    connect_phase - agent.monitor.monitor-scoreboard.connect(analysis_export) and analysis_export.connect(scoreboard.analysis_export)
+    test.sv -   class adder_8bit_test
+                declare environment and sequence, 
+                build_phase - instantiate environment and sequence
+                end_of_elaboration_phase - uvm_top.print_topology()
+                start_of_simulation_phase
+                task run_phase - phase.raise_objection, start_sequencer, phase.drop_objection
+    
+Give me the complete code.
