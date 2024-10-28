@@ -29,7 +29,27 @@ FILE_LIST = $(V_FILES) $(SV_FILES) $(VHD_FILES)
 # switches to enable the VCS command line to launch in Synopsys Euclide IDE
 EUCLIDE_SWITCH =
 EUCLIDE_ARGS =
-EUCLIDE_VSCODE =
+EUCLIDE_VSCODE = 
+
+# Default value for INCLUDE_PATH
+INCLUDE_PATH = ./testbench
+TEST = DEFAULT
+
+# Check for LLM and TRIAL values to set INCLUDE_PATH
+ifeq ($(LLM), _chatgpt4o)
+    INCLUDE_PATH = ../../_chatgpt4o/t$(TRIAL)/$(TEST_DESIGN)_tb
+	TEST = GPTt$(TRIAL)
+endif
+
+ifeq ($(LLM), _starcoder)
+    INCLUDE_PATH = ../../_starcoder/t$(TRIAL)/$(TEST_DESIGN)_tb
+	TEST = SCt$(TRIAL)
+endif
+
+ifeq ($(LLM), _llama3)
+    INCLUDE_PATH = ../../_llama3/t$(TRIAL)/$(TEST_DESIGN)_tb
+	TEST = L3t$(TRIAL)
+endif
 
 help: ## lists the self documenting help file commands
 		@echo ''
@@ -54,8 +74,10 @@ euclide: ## runs the "vcs" target with modification to run Synopsys EUCLIDE IDE
 vcs: ## builds VCS simulation
 		vcs $(EUCLIDE_SWITCH) \
 		-cm line+cond+fsm+branch+assert+tgl -Mupdate +v2k -sverilog -timescale=1ns/10ps \
+		+define+$(TEST) \
 		+incdir+$(UVM_HOME)/src \
 		-full64 \
+		+incdir+$(INCLUDE_PATH) \
 		${UVM_HOME}/src/uvm.sv \
 		${UVM_HOME}/src/dpi/uvm_dpi.cc \
 		-l compile.log -debug_acc+all -CFLAGS -DVCS top.sv ./dut/$(TEST_DESIGN).v $(TEST_DESIGN)_if.sv \
