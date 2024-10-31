@@ -1,14 +1,3 @@
-`include "uvm_macros.svh"
-import uvm_pkg::*;
-
-`ifdef DEFAULT
-    `include "./testbench/adder_8bit_pkg.sv"
-`elsif GPTt1
-    `include "../../_chatgpt4o/t1/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif GPTt2
-    `include "../../_chatgpt4o/t2/adder_8bit_tb/adder_8bit_pkg.sv"
-`endif
-
 module top;
 
     import adder_8bit_pkg::*;
