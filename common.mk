@@ -36,19 +36,19 @@ INCLUDE_PATH = ./testbench
 TEST = DEFAULT
 
 # Check for LLM and TRIAL values to set INCLUDE_PATH
-ifeq ($(LLM), _chatgpt4o)
+ifeq ($(LLM), CodeL)
+    INCLUDE_PATH = ../../_codel/t$(TRIAL)/$(TEST_DESIGN)_tb
+	TEST = CodeLt$(TRIAL)
+endif
+
+ifeq ($(LLM), Gemma2)
+    INCLUDE_PATH = ../../_gemma2/t$(TRIAL)/$(TEST_DESIGN)_tb
+	TEST = Gemmat$(TRIAL)
+endif
+
+ifeq ($(LLM), GPT4)
     INCLUDE_PATH = ../../_chatgpt4o/t$(TRIAL)/$(TEST_DESIGN)_tb
 	TEST = GPTt$(TRIAL)
-endif
-
-ifeq ($(LLM), _starcoder)
-    INCLUDE_PATH = ../../_starcoder/t$(TRIAL)/$(TEST_DESIGN)_tb
-	TEST = SCt$(TRIAL)
-endif
-
-ifeq ($(LLM), _llama3)
-    INCLUDE_PATH = ../../_llama3/t$(TRIAL)/$(TEST_DESIGN)_tb
-	TEST = L3t$(TRIAL)
 endif
 
 help: ## lists the self documenting help file commands
@@ -80,7 +80,7 @@ vcs: ## builds VCS simulation
 		+incdir+$(INCLUDE_PATH) \
 		${UVM_HOME}/src/uvm.sv \
 		${UVM_HOME}/src/dpi/uvm_dpi.cc \
-		-l compile.log -debug_acc+all -CFLAGS -DVCS top.sv ./dut/$(TEST_DESIGN).v $(TEST_DESIGN)_if.sv \
+		-l compile.log -debug_acc+all -CFLAGS -DVCS $(TEST_DESIGN)_include.svh top.sv ./dut/$(TEST_DESIGN).v $(TEST_DESIGN)_if.sv \
 		-top top \
 		+vcs+dumpvars+verilog.vpd $(EUCLIDE_ARGS)
 
