@@ -1,0 +1,41 @@
+Please act as a professional SystemVerilog testbench designer.
+
+ 
+
+Implement a SystemVerilog UVM 2020-2.0 compliant testbench for an 8-bit adder adder_8bit.
+
+Module name:
+    adder_8bit
+
+Input ports:
+    a[7:0]: 8-bit input operand A.
+    b[7:0]: 8-bit input operand B.
+    cin: Carry-in input.
+
+Output ports:
+    sum[7:0]: 8-bit output representing the sum of A and B.
+    cout: Carry-out output.
+
+Use an active agent. Create the sequencer in the agent. In the test, start the sequence on the sequencer.
+
+Use the sequence item below.
+
+sequence_item name:
+    adder_8bit_transaction
+
+members:
+    rand bit [7:0] a
+    rand bit [7:0] b
+    rand bit cin
+    bit [7:0] sum
+    bit cout
+
+Use the existing virtual interface named adder_8bit_if that is placed into the configuration database for the driver and monitor Only include the class based elements in the adder_8bit_pkg.sv.
+
+Include the appropiate uvm_object_util and uvm_component_util macros in every UVM class.
+
+Use initialize all uvm objects with the appropriate uvm constructor.
+
+All uvm classes shall implement their appropriate new method.
+
+Virtual interface is already declared and set in in the top module.
