@@ -1,9 +1,3 @@
-`include "uvm_macros.svh"
-import uvm_pkg::*;
-
-// `ifdef VERIFIED
-`include "./testbench/adder_16bit_pkg.sv"
-// `endif
 module top;
 
     import adder_16bit_pkg::*;
