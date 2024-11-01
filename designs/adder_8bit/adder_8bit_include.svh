@@ -4,7 +4,7 @@ import uvm_pkg::*;
 `ifdef DEFAULT
     `include "./testbench/adder_8bit_pkg.sv"
 `elsif CodeLt1
-    `include "../../_codel/t2/adder_8bit_tb/adder_8bit_pkg.sv"
+    `include "../../_codel/t1/adder_8bit_tb/adder_8bit_pkg.sv"
 `elsif CodeLt2
     `include "../../_codel/t2/adder_8bit_tb/adder_8bit_pkg.sv"  
 `elsif Gemmat1
