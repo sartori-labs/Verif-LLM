@@ -5,12 +5,30 @@ import uvm_pkg::*;
     `include "../../_codel/t1/alu_tb/alu_pkg.sv"
 `elsif CodeLt2
     `include "../../_codel/t2/alu_tb/alu_pkg.sv"  
+`elsif CodeLt3
+    `include "../../_codel/t3/alu_tb/alu_pkg.sv"
+`elsif CodeLt4
+    `include "../../_codel/t4/alu_tb/alu_pkg.sv"
+`elsif CodeLt5
+    `include "../../_codel/t5/alu_tb/alu_pkg.sv"
 `elsif Gemmat1
     `include "../../_gemma2/t1/alu_tb/alu_pkg.sv"
 `elsif Gemmat2
     `include "../../_gemma2/t2/alu_tb/alu_pkg.sv"
+`elsif Gemmat3
+    `include "../../_gemma2/t3/alu_tb/alu_pkg.sv"
+`elsif Gemmat4
+    `include "../../_gemma2/t4/alu_tb/alu_pkg.sv"
+`elsif Gemmat5
+    `include "../../_gemma2/t5/alu_tb/alu_pkg.sv"
 `elsif GPTt1
     `include "../../_chatgpt4o/t1/alu_tb/alu_pkg.sv"
 `elsif GPTt2
     `include "../../_chatgpt4o/t2/alu_tb/alu_pkg.sv"
+`elsif GPTt3
+    `include "../../_chatgpt4o/t3/alu_tb/alu_pkg.sv"
+`elsif GPTt4
+    `include "../../_chatgpt4o/t4/alu_tb/alu_pkg.sv"
+`elsif GPTt5
+    `include "../../_chatgpt4o/t5/alu_tb/alu_pkg.sv"
 `endif
