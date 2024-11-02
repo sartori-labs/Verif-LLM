@@ -30,7 +30,6 @@ FILE_LIST = $(V_FILES) $(SV_FILES) $(VHD_FILES)
 EUCLIDE_SWITCH =
 EUCLIDE_ARGS =
 EUCLIDE_VSCODE = 
-EUCLIDE_BATCH =
 
 # Default value for INCLUDE_PATH
 INCLUDE_PATH = ./testbench
@@ -67,19 +66,10 @@ build:
 euclide: EUCLIDE_SWITCH = -euclide
 euclide: EUCLIDE_ARGS = -euclide_args \
 		$(EUCLIDE_VSCODE) \
-		$(EUCLIDE_BATCH) \
 		-project_location . -workspace ../workspace \
 		-cud_entry "-property -r -ruleset ignore_all ${UVM_HOME}" -end_euclide_args
 euclide: vcs
 euclide: ## runs the "vcs" target with modification to run Synopsys EUCLIDE IDE
-
-euclide_report: euclide
-euclide_report: EUCLIDE_BATCH = -job_type problem_report -no_gui -cud_entry ../../report.cud
-euclide_report: ## runs the euclide lint report
-
-euclide_report_summary: ## runs the euclide lint report summary
-		echo "SUMMARY Fatal / Error / Warning / Info"
-		cat Auto_problem_report.txt | grep "  Total"
 
 vcs: ## builds VCS simulation
 		vcs $(EUCLIDE_SWITCH) \
