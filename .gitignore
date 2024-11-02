@@ -24,6 +24,12 @@ csrc
 DVEfiles
 inter.vpd
 vcdplus.vpd
+verdiLog
+vc_hdrs.h
+urgReport
+ucli.key
+novas.conf
+novas.rc
 
 # Generated directories and files
 simv
@@ -65,4 +71,13 @@ npiLog/
 *.gz
 
 # Synopsys Euclide
+design/workspace/
+EUAN.list
+EUELAB.DB
+Auto_problem_report.txt
+*.cud
+.project
+.settings
+workspace
+.cproject
 design/workspace/
