@@ -11,19 +11,19 @@ interface adder_8bit_if(input logic clk, input logic rst);
 		a_stim: coverpoint a {
 			bins max = {255};
 			bins min = {0};
-			bins all[5] = {[0:255]};
+			bins all[] = {[0:255]};
 		}
 		
 		b_stim: coverpoint b {
 			bins max = {255};
 			bins min = {0};
-			bins all[5] = {[0:255]};
+			bins all[] = {[0:255]};
 		}
 		
 		cin_stim: coverpoint cin {
 			bins max = {1};
 			bins min = {0};
-			bins all[] = {0,1};
+			bins all[] = {[0:1]};
 		}
 		
 		full_stim: cross a_stim, b_stim, cin_stim {
