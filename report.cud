@@ -1,0 +1,9 @@
+# set default ruleset to testbench
+-property -r -ruleset testbench /
+
+# ignore non-generated testbench components
+-property -r -ruleset ignore_all dut
+# -property -r -ruleset ignore_all testbench
+-property -ruleset ignore_all *_if.sv
+-property -ruleset ignore_all top.sv
+
