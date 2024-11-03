@@ -26,39 +26,28 @@ Verif-LLM is a framework designed to streamline the generation of verification e
 The Directory Tree is as shown below
 ```
 Verif-LLM
+├── _chatgpt4o
+│   ├── t1
+│   │   └── accu_tb
+│   ├── t2
+│   │   └── accu_tb
 ├── designs
 │   ├── accu
-│   │   ├── config.yaml
 │   │   ├── dut
 │   │   │   ├── accu.v
 │   │   │   └── design_description.txt
+│   │   ├── accu_if.sv
+│   │   ├── accu_include.svh
+│   │   ├── top.sv
 │   │   └── makefile
-│   ├── adder_16bit
-│   │   ├── config.yaml
-│   │   ├── dut
-│   │   │   ├── adder_16bit.v
-│   │   │   └── design_description.txt
-│   │   └── makefile
+│   ├── 
 .
 .
 .
 .
 .
 
-├── README.md
-└── scripts
-    ├── generate_interface.py
-    ├── generate_package.py
-    ├── run_main.py
-    ├── uvm_agent.py
-    ├── uvm_driver.py
-    ├── uvm_environment.py
-    ├── uvm_monitor.py
-    ├── uvm_scoreboard.py
-    ├── uvm_sequence.py
-    ├── uvm_sequencer.py
-    ├── uvm_test.py
-    └── uvm_transaction.py
+└── README.md
 ```
 
 ## Getting Started
