@@ -2,8 +2,6 @@
 class accu_sequence extends uvm_sequence #(accu_transaction);
   `uvm_object_utils(accu_sequence)
 
-//   `uvm_declare_p_sequencer(accu_sequencer)
-
   function new(string name = "accu_sequence");
     super.new(name);
   endfunction

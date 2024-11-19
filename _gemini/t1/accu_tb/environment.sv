@@ -1,11 +1,11 @@
-// accu_environment.sv
-class accu_environment extends uvm_env;
-  `uvm_component_utils(accu_environment)
+// accu_env.sv
+class accu_env extends uvm_env;
+  `uvm_component_utils(accu_env)
 
   accu_agent agent;
   accu_scoreboard scoreboard;
 
-  function new(string name = "accu_environment", uvm_component parent = null);
+  function new(string name = "accu_env", uvm_component parent = null);
     super.new(name, parent);
   endfunction
 
