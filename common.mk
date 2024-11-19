@@ -37,13 +37,13 @@ INCLUDE_PATH = ./testbench
 TEST = DEFAULT
 
 # Check for LLM and TRIAL values to set INCLUDE_PATH
-ifeq ($(LLM), CodeL)
-    INCLUDE_PATH = ../../_codel/t$(TRIAL)/$(TEST_DESIGN)_tb
+ifeq ($(LLM), Llama3)
+    INCLUDE_PATH = ../../_llama3/t$(TRIAL)/$(TEST_DESIGN)_tb
 	TEST = CodeLt$(TRIAL)
 endif
 
-ifeq ($(LLM), Gemma2)
-    INCLUDE_PATH = ../../_gemma2/t$(TRIAL)/$(TEST_DESIGN)_tb
+ifeq ($(LLM), Gemini)
+    INCLUDE_PATH = ../../_gemini/t$(TRIAL)/$(TEST_DESIGN)_tb
 	TEST = Gemmat$(TRIAL)
 endif
 
