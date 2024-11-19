@@ -4,25 +4,25 @@ import uvm_pkg::*;
 `ifdef DEFAULT
     `include "./testbench/adder_16bit_pkg.sv"
 `elsif CodeLt1
-    `include "../../_codel/t1/adder_16bit_tb/adder_16bit_pkg.sv"
+    `include "../../_llama3/t1/adder_16bit_tb/adder_16bit_pkg.sv"
 `elsif CodeLt2
-    `include "../../_codel/t2/adder_16bit_tb/adder_16bit_pkg.sv"  
+    `include "../../_llama3/t2/adder_16bit_tb/adder_16bit_pkg.sv"  
 `elsif CodeLt3
-    `include "../../_codel/t3/adder_16bit_tb/adder_16bit_pkg.sv"
+    `include "../../_llama3/t3/adder_16bit_tb/adder_16bit_pkg.sv"
 `elsif CodeLt4
-    `include "../../_codel/t4/adder_16bit_tb/adder_16bit_pkg.sv"
+    `include "../../_llama3/t4/adder_16bit_tb/adder_16bit_pkg.sv"
 `elsif CodeLt5
-    `include "../../_codel/t5/adder_16bit_tb/adder_16bit_pkg.sv"
+    `include "../../_llama3/t5/adder_16bit_tb/adder_16bit_pkg.sv"
 `elsif Gemmat1
-    `include "../../_gemma2/t1/adder_16bit_tb/adder_16bit_pkg.sv"
+    `include "../../_gemini/t1/adder_16bit_tb/adder_16bit_pkg.sv"
 `elsif Gemmat2
-    `include "../../_gemma2/t2/adder_16bit_tb/adder_16bit_pkg.sv"
+    `include "../../_gemini/t2/adder_16bit_tb/adder_16bit_pkg.sv"
 `elsif Gemmat3
-    `include "../../_gemma2/t3/adder_16bit_tb/adder_16bit_pkg.sv"
+    `include "../../_gemini/t3/adder_16bit_tb/adder_16bit_pkg.sv"
 `elsif Gemmat4
-    `include "../../_gemma2/t4/adder_16bit_tb/adder_16bit_pkg.sv"
+    `include "../../_gemini/t4/adder_16bit_tb/adder_16bit_pkg.sv"
 `elsif Gemmat5
-    `include "../../_gemma2/t5/adder_16bit_tb/adder_16bit_pkg.sv"
+    `include "../../_gemini/t5/adder_16bit_tb/adder_16bit_pkg.sv"
 `elsif GPTt1
     `include "../../_chatgpt4o/t1/adder_16bit_tb/adder_16bit_pkg.sv"
 `elsif GPTt2
