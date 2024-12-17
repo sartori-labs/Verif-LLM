@@ -1,0 +1,36 @@
+Please act as a professional verification engineer.
+
+Verilog design of 8-bit adder (DUT) is defined as. 
+
+Module name:  
+    adder_8bit               
+Input ports:
+    a[7:0]: 8-bit input operand A.
+    b[7:0]: 8-bit input operand B.
+    cin: Carry-in input.
+Output ports:
+    sum[7:0]: 8-bit output representing the sum of A and B.
+    cout: Carry-out output.
+
+adder_8bit_if() Interface is defined.
+
+Instance of the interface, and the virtual interface is set in the TOP module which wraps the DUT.
+
+Utilize the existing top module and interface to handle signal interactions.
+
+Required:
+Transaction class - Write a UVM sequence item to represent a transaction. All inputs should be randomized except clk and rst_n, outputs are just bits.
+Sequence class - Write a UVM sequence that randomizes inputs, generates multiple transactions in a loop for high functional coverage.
+Sequencer class
+Driver classs - Write a UVM driver that takes transactions from the sequencer. In build_phase get the virtual interface. In run_phase assign values to inputs through the virtual interface. Use anlysis port to send transaction to scoreboard.
+Monitor class - Write a UVM monitor that connects to the virtual interface. In build_phase get the virtual interface. In run_phase the monitor should sample the values of I/O during each transaction, package them into a UVM transaction object, and forward the data to an analysis port for scoreboard verification.
+Agent class - write a UVM agent. build_phase should include a sequencer, driver, monitor It should also get virtual interface. 
+Scoreboard class - Write a UVM scoreboard that should receive transactions from the monitor through an analysis port, compute the expected result, and compare it to the output from the interface. Report mismatches. Write complete logic.
+Environment class - Write a UVM environment class that includes the agent and the scoreboard. Connect the monitor to the environment. Connect the environment to the scoreboard.
+Test class - Write a UVM test class, declare environment and sequence, 
+            build_phase - instantiate environment and sequence
+            run_phase - phase.raise_objection, start_sequencer, phase.drop_objection
+
+Make sure the connections between the sequencer, driver, monitor, and scoreboard are correctly established.
+
+Give me the complete code.
