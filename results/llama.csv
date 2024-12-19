@@ -1,0 +1,26 @@
+LLM,Design,Run,Line,Conditional,Toggle,FSM,Branch,Group
+llama3.2,accu,Run 1,100.00,66.67,85.25,0,80.00,46.67
+llama3.2,accu,Run 2,0,0,0,0,0,0
+llama3.2,accu,Run 3,46.88,11.11,0,0,26.67,0
+llama3.2,accu,Run 4,100.00,66.67,86.07,0,80.00,30.00
+llama3.2,accu,Run 5,0,0,0,0,0,0
+llama3.2,adder_8bit,Run 1,77.78,0,0,0,0,0
+llama3.2,adder_8bit,Run 2,100.00,0,98.57,0,0,0.02
+llama3.2,adder_8bit,Run 3,100.00,0,98.57,0,0,0.02
+llama3.2,adder_8bit,Run 4,77.78,0,0,0,0,0
+llama3.2,adder_8bit,Run 5,77.78,0,0,0,0,0
+llama3.2,adder_16bit,Run 1,100.00,0,99.87,0,0,36.36
+llama3.2,adder_16bit,Run 2,100.00,0,98.65,0,0,13.94
+llama3.2,adder_16bit,Run 3,100.00,0,97.84,0,0,13.94
+llama3.2,adder_16bit,Run 4,100.00,0,99.84,0,0,12.12
+llama3.2,adder_16bit,Run 5,100.00,0,99.87,0,0,36.97
+llama3.2,fsm,Run 1,41.67,0,0,0,22.22,0
+llama3.2,fsm,Run 2,0,0,0,0,0,0
+llama3.2,fsm,Run 3,38.89,0,0,0,16.67,0
+llama3.2,fsm,Run 4,0,0,0,0,0,0
+llama3.2,fsm,Run 5,0,0,0,0,0,0
+llama3.2,alu,Run 1,0,0,0,0,0,0
+llama3.2,alu,Run 2,60.71,61.54,94.13,0,48.00,0
+llama3.2,alu,Run 3,0,0,0,0,0,0
+llama3.2,alu,Run 4,0,0,0,0,0,0
+llama3.2,alu,Run 5,0,0,0,0,0,0

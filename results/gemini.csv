@@ -1,0 +1,26 @@
+LLM,Design,Run,Line,Conditional,Toggle,FSM,Branch,Group
+gemini,accu,Run 1,100.00,66.67,94.26,0,80.00,50.00
+gemini,accu,Run 2,100.00,66.67,94.26,0,80.00,50.00
+gemini,accu,Run 3,100.00,66.67,94.26,0,80.00,50.00
+gemini,accu,Run 4,100.00,66.67,94.26,0,80.00,50.00
+gemini,accu,Run 5,100.00,66.67,94.26,0,80.00,50.00
+gemini,adder_8bit,Run 1,100.00,0,98.57,0,0,0.20
+gemini,adder_8bit,Run 2,100.00,0,98.57,0,0,0.20
+gemini,adder_8bit,Run 3,100.00,0,98.57,0,0,0.20
+gemini,adder_8bit,Run 4,100.00,0,98.57,0,0,0.20
+gemini,adder_8bit,Run 5,100.00,0,98.57,0,0,0.20
+gemini,adder_16bit,Run 1,100.00,0,99.87,0,0,35.15
+gemini,adder_16bit,Run 2,100.00,0,99.87,0,0,35.15
+gemini,adder_16bit,Run 3,100.00,0,99.87,0,0,35.15
+gemini,adder_16bit,Run 4,100.00,0,99.87,0,0,35.15
+gemini,adder_16bit,Run 5,100.00,0,99.87,0,0,35.15
+gemini,fsm,Run 1,100.00,100.00,93.75,71.43,94.44,100.00
+gemini,fsm,Run 2,94.44,66.67,93.75,57.14,83.33,100.00
+gemini,fsm,Run 3,100.00,100.00,93.75,71.43,94.44,100.00
+gemini,fsm,Run 4,100.00,100.00,93.75,71.43,94.44,100.00
+gemini,fsm,Run 5,100.00,100.00,93.75,71.43,94.44,100.00
+gemini,alu,Run 1,96.43,100.00,97.30,0,96.00,22.08
+gemini,alu,Run 2,0,0,0,0,0,0
+gemini,alu,Run 3,0,0,0,0,0,0
+gemini,alu,Run 4,0,0,0,0,0,0
+gemini,alu,Run 5,96.43,100.00,97.30,0,96.00,22.08

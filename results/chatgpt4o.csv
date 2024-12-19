@@ -1,0 +1,26 @@
+LLM,Design,Run,Line,Conditional,Toggle,FSM,Branch,Group
+chatgpt4o,accu,Run 1,100.00,88.89,94.26,0.00,100.00,43.33
+chatgpt4o,accu,Run 2,0.00,0.00,0.00,0.00,0.00,0.00
+chatgpt4o,accu,Run 3,100.00,88.89,81.97,0.00,100.00,30.00
+chatgpt4o,accu,Run 4,100.00,66.67,83.61,0.00,80.00,43.33
+chatgpt4o,accu,Run 5,0.00,0.00,0.00,0.00,0.00,0.00
+chatgpt4o,adder_8bit,Run 1,100.00,0,98.57,0,0,0.11
+chatgpt4o,adder_8bit,Run 2,77.78,0,0,0,0,0
+chatgpt4o,adder_8bit,Run 3,100.00,0,98.57,0,0,0.20
+chatgpt4o,adder_8bit,Run 4,100.00,0,98.57,0,0,0.20
+chatgpt4o,adder_8bit,Run 5,100.00,0,98.57,0,0,0.21
+chatgpt4o,adder_16bit,Run 1,100.00,0,99.87,0,0,12.73
+chatgpt4o,adder_16bit,Run 2,100.00,0,99.87,0,0,13.94
+chatgpt4o,adder_16bit,Run 3,77.78,0,0,0,0,0
+chatgpt4o,adder_16bit,Run 4,100.00,0,99.87,0,0,12.73
+chatgpt4o,adder_16bit,Run 5,77.78,0,0,0,0,0
+chatgpt4o,fsm,Run 1,0,0,0,0,0,0
+chatgpt4o,fsm,Run 2,100.00,100.00,93.75,71.43,94.44,100.00
+chatgpt4o,fsm,Run 3,0,0,0,0,0,0
+chatgpt4o,fsm,Run 4,100.00,100.00,93.75,71.43,94.44,100.00
+chatgpt4o,fsm,Run 5,100.00,100.00,93.75,71.43,94.44,100.00
+chatgpt4o,alu,Run 1,85.71,69.23,97.62,0,76.00,2.60
+chatgpt4o,alu,Run 2,85.72,69.23,97.62,0,76.00,2.60
+chatgpt4o,alu,Run 3,85.71,69.23,97.62,0,76.00,18.18
+chatgpt4o,alu,Run 4,82.14,61.54,97.30,0,68.00,15.58
+chatgpt4o,alu,Run 5,89.29,92.31,97.62,0,84.00,18.18
