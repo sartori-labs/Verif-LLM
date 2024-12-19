@@ -1,0 +1,57 @@
+Please act as a professional verification engineer.
+
+Verilog design of ALU (DUT) for a 32-bit MIPS-ISA CPU. The “a” and “b” are the two operands of the ALU, the “aluc” is the opcode, and the “r” gives out the result. “zero” means if the result is zero, “carry” means if there is a carry bit, “negative” means if the result is negative, “overflow” means if the computation is overflow, the “flag” is the result of “slt” and “sltu” instructions. The supported operations and corresponding opcode are shown below:
+    parameter ADD = 6'b100000;
+    parameter ADDU = 6'b100001;
+    parameter SUB = 6'b100010;
+    parameter SUBU = 6'b100011;
+    parameter AND = 6'b100100;
+    parameter OR = 6'b100101;
+    parameter XOR = 6'b100110;
+    parameter NOR = 6'b100111;
+    parameter SLT = 6'b101010;
+    parameter SLTU = 6'b101011;
+    parameter SLL = 6'b000000;
+    parameter SRL = 6'b000010;
+    parameter SRA = 6'b000011;
+    parameter SLLV = 6'b000100;
+    parameter SRLV = 6'b000110;
+    parameter SRAV = 6'b000111;
+    parameter LUI = 6'b001111;
+
+Module name:  
+    alu               
+Input ports:
+    a: a 32-bit input operand
+    b: a 32-bit input operand
+    aluc: a 6-bit control signal for selecting the operation to be performed
+Output ports:
+    r: a 32-bit output representing the result of the operation
+    zero: a 1-bit output indicating whether the result is zero
+    carry: a 1-bit output indicating whether a carry occurred during the operation
+    negative: a 1-bit output indicating whether the result is negative
+    overflow: a 1-bit output indicating whether an overflow occurred during the operation
+    flag: a 1-bit output representing a general flag, which is set based on specific operations (SLT and SLTU)
+
+alu_if() Interface is defined.
+
+Instance of the interface, and the virtual interface is set in the TOP module which wraps the DUT.
+
+Utilize the existing top module and interface to handle signal interactions.
+
+Required:
+Transaction class - alu_trans - Write a UVM sequence item to represent a transaction. All inputs should be randomized except clk and rst_n, outputs are just bits. Write macros for all i/O.
+Sequence class - alu_sequence - Write a UVM sequence that randomizes inputs, generates multiple transactions in a loop for high functional coverage.
+Sequencer class - alu_sequencer - write a constructor
+Driver classs - alu_driver - Write a UVM driver that takes transactions from the sequencer, assign values to inputs through the virtual interface. Use anlysis port to send transaction to scoreboard.
+Monitor class - alu_monitor - Write a UVM monitor that connects to the virtual interface. The monitor should sample the values of I/O during each transaction, package them into a UVM transaction object, and forward the data to an analysis port for scoreboard verification.
+Agent class - alu_agent - write a UVM agent. it should include a sequencer, driver, monitor and the virtual interface. 
+Scoreboard class - alu_scoreboard - Write a UVM scoreboard that should receive transactions from the monitor through an analysis port, compute the expected result, and compare it to the output from the interface. Report mismatches.
+Environment class - alu_environment - Write a UVM environment class that includes the agent and the scoreboard. Connect the monitor to the environment. Connect the environment to the scoreboard.
+Test class - alu_test - Write a UVM test class, declare environment and sequence, 
+            build_phase - instantiate environment and sequence
+            run_phase - phase.raise_objection, start_sequencer, phase.drop_objection
+
+Make sure the connections between the sequencer, driver, monitor, and scoreboard are correctly established.
+
+Give me the complete UVM code.
