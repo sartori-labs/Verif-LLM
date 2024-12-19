@@ -57,16 +57,19 @@ help: ## lists the self documenting help file commands
 	@egrep '^(.+)\:\ ##\ (.+)' ${MAKEFILE_LIST} | column -t -c 2 -s ':#'
 	@echo ''
 
-	@echo
 	@echo "EXAMPLE USAGE"
 	@echo ""
 	@echo "RUN WITH A PARTICULAR LLM BUILD AND TRIAL THEN SIMULATE"
 	@echo "> make vcs LLM=Gemini TRIAL=5"
 	@echo "> make sim"
 	@echo ""
+	@echo "GATHER COVERAGE METRICS (after SIMULATION)"
+	@echo "> make coverage_report coverage_summary"
+	@echo ""
 	@echo "MAKE LINT REPORT FOR PARTICULAR LLM BUILD AND TRIAL"
 	@echo "> make euclide_report LLM=Gemini TRIAL=5"
 	@echo "> make euclide_report"
+	@echo ""
 
 all: build
 all: ## makes all which is currently just build
