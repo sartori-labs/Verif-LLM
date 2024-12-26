@@ -39,12 +39,12 @@ TEST = DEFAULT
 # Check for LLM and TRIAL values to set INCLUDE_PATH
 ifeq ($(LLM), Llama3)
     INCLUDE_PATH = ../../_llama3/t$(TRIAL)/$(TEST_DESIGN)_tb
-	TEST = CodeLt$(TRIAL)
+	TEST = Llamat$(TRIAL)
 endif
 
 ifeq ($(LLM), Gemini)
     INCLUDE_PATH = ../../_gemini/t$(TRIAL)/$(TEST_DESIGN)_tb
-	TEST = Gemmat$(TRIAL)
+	TEST = Geminit$(TRIAL)
 endif
 
 ifeq ($(LLM), GPT4)
