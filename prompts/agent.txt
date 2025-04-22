@@ -1,0 +1,3 @@
+Agent class - adder_8bit_agent - write a UVM agent. it should include a sequencer, driver, monitor and the virtual interface. 
+
+Give code for agent.sv only

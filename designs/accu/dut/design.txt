@@ -1,0 +1,12 @@
+Verilog DUT has the following
+
+Module name:  
+    accu               
+Input ports:
+	clk: Clock input for synchronization.
+	rst_n: Active-low reset signal.
+	data_in[7:0]: 8-bit input data for addition.
+	valid_in: Input signal indicating readiness for new data.   
+Output ports:
+    valid_out: Output signal indicating when 4 input data accumulation is reached.
+	data_out[9:0]: 10-bit output data representing the accumulated sum.

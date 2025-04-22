@@ -1,0 +1,3 @@
+Scoreboard class - adder_8bit_scoreboard - Write a UVM scoreboard that should receive transactions from the monitor through an analysis port, compute the expected result, and compare it to the output from the interface. Report mismatches.
+
+Give code for scoreboard.sv only

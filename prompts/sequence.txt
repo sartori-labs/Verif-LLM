@@ -1,0 +1,3 @@
+Sequence class - adder_8bit_sequence #(adder_8bit_trans) - Write a UVM sequence that generates multiple randomized transactions in a loop for high functional coverage.
+
+Give code for sequence.sv only

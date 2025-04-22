@@ -1,0 +1,3 @@
+Driver classs - adder_8bit_driver - Write a UVM driver that takes transactions from the sequencer, assign values to inputs through the virtual interface. Use anlysis port to send transaction to scoreboard.
+
+Give code for driver.sv only

@@ -1,0 +1,3 @@
+Environment class - adder_8bit_environment - Write a UVM environment class that includes the agent and the scoreboard. Connect the monitor to the environment. Connect the environment to the scoreboard.
+
+Give code for environment.sv only

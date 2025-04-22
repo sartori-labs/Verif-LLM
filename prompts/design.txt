@@ -1,0 +1,19 @@
+Please act as a professional verification engineer.
+
+Verilog design of 8-bit adder (DUT) is defined as. 
+
+Module name:  
+    adder_8bit               
+Input ports:
+    a[7:0]: 8-bit input operand A.
+    b[7:0]: 8-bit input operand B.
+    cin: Carry-in input.
+Output ports:
+    sum[7:0]: 8-bit output representing the sum of A and B.
+    cout: Carry-out output.
+
+adder_8bit_if() Interface is defined.
+
+Instance of the interface, and the virtual interface is already set in the TOP module which wraps the DUT.
+
+Use the existing top module and interface to handle signal interactions.

@@ -1,0 +1,3 @@
+Transaction class - adder_8bit_trans - Write a UVM sequence item to represent a transaction. All inputs should be randomized except clk and rst_n, outputs are just bits.
+
+Give code for transaction.sv only

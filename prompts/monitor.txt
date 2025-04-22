@@ -1,0 +1,3 @@
+Monitor class - adder_8bit_monitor - Write a UVM monitor that connects to the virtual interface. The monitor should sample the values of I/O during each transaction, package them into a UVM transaction object, and forward the data to an analysis port for scoreboard verification.
+
+Give code for monitor.sv only

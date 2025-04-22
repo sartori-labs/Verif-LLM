@@ -1,0 +1,5 @@
+Test class - adder_8bit_test - Write a UVM test class, declare environment and sequence, 
+            build_phase - instantiate environment and sequence
+            run_phase - phase.raise_objection, start_sequencer, phase.drop_objection
+
+Give code for test.sv only
