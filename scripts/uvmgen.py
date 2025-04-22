@@ -2,55 +2,14 @@ import os
 import re
 import sys
 import ollama
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
-def generate_uvm_modules(llm_model, design_name, iteration):
-    # Paths
-    # home_directory = os.path.expanduser("~")
-    base_dir = os.path.dirname(os.path.dirname(__file__))
-    input_dir = os.path.join(base_dir, "prompts")
-    design_dir = os.path.join(base_dir, "designs", design_name, "dut")
-    output_dir = os.path.join(base_dir, "designs", design_name, "TB")
-    result_dir = os.path.join(base_dir, "designs", design_name, "results")
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'  # Use the first GPU
 
-    print(base_dir)
-    print(design_dir)
-    print(input_dir)
-    print(output_dir)
-    print(result_dir)
-
-    os.makedirs(output_dir, exist_ok=True)
-    os.makedirs(result_dir, exist_ok=True)
-
-    # Clear old TB files
-    for f in os.listdir(output_dir):
-        os.remove(os.path.join(output_dir, f))
-
-    # Copy static files
-    design_path = os.path.join(base_dir, "designs", design_name)
-    for fname in os.listdir(design_path):
-        if fname.endswith(".sv") or fname.endswith(".svh") or fname == "Makefile":
-            os.system(f"cp {os.path.join(design_path, fname)} {output_dir}/")
-    os.system(f"cp {os.path.join(design_path, 'dut')}/*.v {output_dir}/")
-
-    design_file = os.path.join(input_dir, "design.txt")
-    with open(design_file, "r") as f:
-        design_desc = f.read()
-
-    input_files = [
-        "transaction.txt", "sequence.txt", "driver.txt", "monitor.txt",
-        "agent.txt", "scoreboard.txt", "environment.txt", "test.txt"
-    ]
-    output_files = [
-        "transaction.sv", "sequence.sv", "driver.sv", "monitor.sv",
-        "agent.sv", "scoreboard.sv", "environment.sv", "test.sv"
-    ]
-
-    for in_file, out_file in zip(input_files, output_files):
-        with open(os.path.join(input_dir, in_file), "r") as f:
-            prompt = design_desc + f.read()
-
-        response = ollama.generate(model=llm_model, prompt=prompt).response
-        matches = re.findall(r"```(.*?)```", response, re.DOTALL)
+def generate_single_component(llm_model, llm_in, out_file, output_dir):
+    try:
+        llm_out = ollama.generate(model=llm_model, prompt=llm_in, options={'temperature': 0}).response
+        matches = re.findall(r"```(.*?)```", llm_out, re.DOTALL)
 
         if matches:
             lines = matches[0].strip().split("\n")
@@ -62,7 +21,67 @@ def generate_uvm_modules(llm_model, design_name, iteration):
             else:
                 print(f"[WARN] {out_file} content empty.")
         else:
-            print(f"[ERROR] No content found in response for {in_file}")
+            print(f"[ERROR] No code block found for {out_file}")
+    except Exception as e:
+        print(f"[ERROR] Exception while generating {out_file}: {e}")
+
+def generate_uvm_modules(llm_model, design_name, iteration):
+    # Paths
+    base_dir = os.path.dirname(os.path.dirname(__file__))
+    # input_dir = os.path.join(base_dir, "prompts")
+    design_dir = os.path.join(base_dir, "designs", design_name, "dut")
+    output_dir = os.path.join(base_dir, "designs", design_name, "tb")
+    result_dir = os.path.join(base_dir, "designs", design_name, "results")
+
+    os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(result_dir, exist_ok=True)
+
+    # Clear old TB files
+    for f in os.listdir(output_dir):
+        os.remove(os.path.join(output_dir, f))
+
+    design_file = os.path.join(design_dir, "design.txt")
+    with open(design_file, "r") as f:
+        design_desc = f.read()
+
+    implementation_file = os.path.join(design_dir, "implementation.txt")
+    with open(implementation_file, "r") as f:
+        implementation = f.read()
+
+    transaction_prompt = "Required:\nTransaction class - " + design_name + "_trans - Write a UVM sequence item to represent a transaction. All inputs should be randomized except clk and rst_n. Outputs are just bits.\n\nGive code for transaction.sv only"
+    sequence_prompt = "Required:\nSequence class - " + design_name + "_sequence #(" + design_name + "_trans) - Write a UVM sequence that generates multiple randomized transactions in a loop for high functional coverage.\n\nGive code for sequence.sv only"
+    driver_prompt = "Required:\nDriver classs - " + design_name + "_driver - Write a UVM driver that takes transactions from the sequencer, assign values to inputs through the virtual interface. Use anlysis port to send transaction to scoreboard.\n\nGive code for driver.sv only"
+    monitor_prompt = "Required:\nMonitor class - " + design_name + "_monitor - Write a UVM monitor that connects to the virtual interface. The monitor should sample the values of I/O during each transaction, package them into a UVM transaction object, and forward the data to an analysis port for scoreboard verification.\n\nGive code for monitor.sv only"
+    agent_prompt = "Required:\nAgent class - " + design_name + "_agent - write a UVM agent. it should include a sequencer, driver, monitor and the virtual interface. \n\nGive code for agent.sv only"
+    scoreboard_prompt = "Required:\nScoreboard class - " + design_name + "_scoreboard - Write a UVM scoreboard that should receive transactions from the monitor through an analysis port, compute the expected result, and compare it to the output from the interface. Report mismatches.\n\n" + implementation + "\n\nGive code for scoreboard.sv only"
+    environment_prompt = "Required:\nEnvironment class - " + design_name + "_environment - Write a UVM environment class that includes the agent and the scoreboard. Connect the monitor to the environment. Connect the environment to the scoreboard.\n\nGive code for environment.sv only"
+    test_prompt = "Required:\nTest class - " + design_name + "_test - Write a UVM test class, declare environment and sequence, build_phase - instantiate environment and sequence and run_phase - phase.raise_objection, start_sequencer, phase.drop_objection\n\nGive code for test.sv only"
+    
+    prompts = [transaction_prompt, sequence_prompt, driver_prompt, monitor_prompt,
+               agent_prompt, scoreboard_prompt, environment_prompt, test_prompt
+    ]
+    
+    output_files = [
+        "transaction.sv", "sequence.sv", "driver.sv", "monitor.sv",
+        "agent.sv", "scoreboard.sv", "environment.sv", "test.sv"
+    ]
+
+    llm_inputs = [design_desc + "\n\n" + prompt for prompt in prompts]
+    
+    response = ollama.generate('gemma3:12b', 'Why is the sky blue?')
+    print(response['response'])    
+    
+    print(ollama.ps())
+    
+    # for llm_in# Run in parallel
+    # with ThreadPoolExecutor(max_workers=len(llm_inputs)) as executor:
+    #     futures = [
+    #         # executor.submit(generate_single_component, llm_model, llm_in, out_file, output_dir)
+    #         # for llm_in, out_file in zip(llm_inputs, output_files)
+    #     ]
+
+    #     for future in as_completed(futures):
+    #         future.result()
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
@@ -73,5 +92,4 @@ if __name__ == "__main__":
     DESIGN = sys.argv[2]
     ITER = sys.argv[3]
     
-
     generate_uvm_modules(LLM, DESIGN, ITER)
