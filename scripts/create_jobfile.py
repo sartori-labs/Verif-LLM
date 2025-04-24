@@ -1,10 +1,17 @@
 import argparse
 import os
 
+# deepseek - R1 - 70b 
+# qwq - 32b
+# gemma3 - 27b
+# llama3 - 70b
+# qwen25 - 32b
+# mistral - small3.1 - 24b
+# phi4 - 14b
 LLMS = [
-    "deepseek-r1:70b", "qwq:32b", "gemma3:27b",
-    "llama3.3:70b", "qwen2.5:32b", "mistral-small3.1", 
-    "phi4:14b"
+    "deepseek", "qwq", "gemma3",
+    "llama3", "qwen25", "mistral", 
+    "phi4"
 ]
 
 # DESIGNS to Consider = [
@@ -34,7 +41,7 @@ def generate_launch_script(llm, iteration):
     #   sleep 10
     # done
     for design in DESIGNS:
-        job_name = f"{design}_{llm.replace(':', '_')}_iter{iteration}"
+        job_name = f"{design}_{llm}_iter{iteration}"
         out_log = f"logs/{job_name}.out"
         err_log = f"logs/{job_name}.err"
         design_path = f"designs/{design}"
@@ -43,18 +50,17 @@ def generate_launch_script(llm, iteration):
         # Build file existence check string
         file_check = " && ".join([f"test -f {tb_path}/{fname}" for fname in output_files])
         
-        # TODO: #12 change status.log to a variable based on LLM
         wrapped_cmd = (
             f"python3 scripts/uvmgen.py '{llm}' '{design}' '{iteration}' "
             f"&& ({file_check}) "
-            f"&& echo 'iter:{iteration} [uvmgen] OK' >> {design_path}/status.log "
-            f"|| (echo 'iter:{iteration} [uvmgen] FAIL' >> {design_path}/status.log && exit 1)"
+            f"&& echo 'iter:{iteration} [uvmgen] OK' >> {design_path}/{llm}_status.log "
+            f"|| (echo 'iter:{iteration} [uvmgen] FAIL' >> {design_path}/{llm}_status.log && exit 1)"
             f" && cd {design_path}"
-            f" && (make vcs && echo 'iter:{iteration} [vcs] OK' >> status.log || (echo 'iter:{iteration} [vcs] FAIL' >> status.log && exit 1))"
-            f" && (make sim && echo 'iter:{iteration} [sim] OK' >> status.log || (echo 'iter:{iteration} [sim] FAIL' >> status.log && exit 1))"
-            f" && (make coverage_report coverage_summary && echo 'iter:{iteration} [coverage] OK' >> status.log || (echo 'iter:{iteration} [coverage] FAIL' >> status.log && exit 1))"
-            f" && (make clean && echo 'iter:{iteration} [clean] OK' >> status.log || (echo 'iter:{iteration} [clean] FAIL' >> status.log && exit 1))"
-            f" && (rm -rf && echo 'iter:{iteration} [cleanup] OK' >> status.log || echo 'iter:{iteration} [cleanup] FAIL' >> status.log)"
+            f" && (make vcs && echo 'iter:{iteration} [vcs] OK' >> {llm}_status.log || (echo 'iter:{iteration} [vcs] FAIL' >> {llm}_status.log && exit 1))"
+            f" && (make sim && echo 'iter:{iteration} [sim] OK' >> {llm}_status.log || (echo 'iter:{iteration} [sim] FAIL' >> {llm}_status.log && exit 1))"
+            f" && (make coverage_report coverage_summary && echo 'iter:{iteration} [coverage] OK' >> {llm}_status.log || (echo 'iter:{iteration} [coverage] FAIL' >> {llm}_status.log && exit 1))"
+            f" && (make clean && echo 'iter:{iteration} [clean] OK' >> {llm}_status.log || (echo 'iter:{iteration} [clean] FAIL' >> {llm}_status.log && exit 1))"
+            f" && (rm -rf && echo 'iter:{iteration} [cleanup] OK' >> {llm}_status.log || echo 'iter:{iteration} [cleanup] FAIL' >> {llm}_status.log)"
         )
 
         cmd = (
