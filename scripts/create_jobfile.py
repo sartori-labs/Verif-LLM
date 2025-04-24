@@ -7,22 +7,55 @@ LLMS = [
     "phi4:14b"
 ]
 
-DESIGNS = [
-    "adder_8bit", "adder_16bit", "adder_32bit", "multi_8bit", "multi_16bit",
-    "sub_64bit", "div_16bit", "comparator_4bit", "accu", "fixed_point_add",
-    "fsm", "sequence_detector", "JC_counter", "ring_counter", "up_down_counter",
-    "asyn_fifo", "RAM", "ROM", "LFSR", "barrel_shifter", "clk_gen", "alu",
-    "freq_div", "calendar", "traffic_light", "parallel2serial", "serial2parallel",
-    "edge_detect", "width_8to16", "synchronizer"
-]
+# DESIGNS to Consider = [
+#     "adder_8bit", "adder_16bit", "adder_32bit", "multi_8bit", "multi_16bit",
+#     "sub_64bit", "div_16bit", "comparator_4bit", "accu", "fixed_point_add",
+#     "fsm", "sequence_detector", "JC_counter", "ring_counter", "up_down_counter",
+#     "asyn_fifo", "RAM", "ROM", "LFSR", "barrel_shifter", "clk_gen", "alu",
+#     "freq_div", "calendar", "traffic_light", "parallel2serial", "serial2parallel",
+#     "edge_detect", "width_8to16", "synchronizer"
+# ]
+
+# Paths
+base_dir = os.path.dirname(os.path.dirname(__file__))
+DESIGNS = os.listdir(os.path.join(base_dir, "designs"))
+
+print(DESIGNS)
 
 def generate_launch_script(llm, iteration):
     launch_lines = ["#!/bin/bash\n"]
 
+    output_files = [
+        "transaction.sv", "sequence.sv", "driver.sv", "monitor.sv",
+        "agent.sv", "scoreboard.sv", "environment.sv", "test.sv"
+    ]
+    # TODO: #15 Add checkpoint after each iteration
+    # while squeue -u $USER | grep -q ' R\| PD'; do
+    #   sleep 10
+    # done
     for design in DESIGNS:
         job_name = f"{design}_{llm.replace(':', '_')}_iter{iteration}"
         out_log = f"logs/{job_name}.out"
         err_log = f"logs/{job_name}.err"
+        design_path = f"designs/{design}"
+        tb_path = f"{design_path}/tb"
+
+        # Build file existence check string
+        file_check = " && ".join([f"test -f {tb_path}/{fname}" for fname in output_files])
+        
+        # TODO: #12 change status.log to a variable based on LLM
+        wrapped_cmd = (
+            f"python3 scripts/uvmgen.py '{llm}' '{design}' '{iteration}' "
+            f"&& ({file_check}) "
+            f"&& echo 'iter:{iteration} [uvmgen] OK' >> {design_path}/status.log "
+            f"|| (echo 'iter:{iteration} [uvmgen] FAIL' >> {design_path}/status.log && exit 1)"
+            f" && cd {design_path}"
+            f" && (make vcs && echo 'iter:{iteration} [vcs] OK' >> status.log || (echo 'iter:{iteration} [vcs] FAIL' >> status.log && exit 1))"
+            f" && (make sim && echo 'iter:{iteration} [sim] OK' >> status.log || (echo 'iter:{iteration} [sim] FAIL' >> status.log && exit 1))"
+            f" && (make coverage_report coverage_summary && echo 'iter:{iteration} [coverage] OK' >> status.log || (echo 'iter:{iteration} [coverage] FAIL' >> status.log && exit 1))"
+            f" && (make clean && echo 'iter:{iteration} [clean] OK' >> status.log || (echo 'iter:{iteration} [clean] FAIL' >> status.log && exit 1))"
+            f" && (rm -rf && echo 'iter:{iteration} [cleanup] OK' >> status.log || echo 'iter:{iteration} [cleanup] FAIL' >> status.log)"
+        )
 
         cmd = (
             f"sbatch "
@@ -34,8 +67,9 @@ def generate_launch_script(llm, iteration):
             f"--cpus-per-task=4 "
             f"--mem=16G "
             f"--time=00:30:00 "
-            f"--wrap=\"python3 scripts/uvmgen.py '{llm}' '{design}' '{iteration}'\""
+            f"--wrap=\"{wrapped_cmd}\""
         )
+
         launch_lines.append(cmd)
 
     return "\n".join(launch_lines)
@@ -44,6 +78,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--llm', required=True, help='LLM to run')
     parser.add_argument('--iter', type=int, required=True, help='Iteration number')
+    
+    # TODO: #8 Add parameter - mode = benchmark, generate
     parser.add_argument('--debug', action='store_true', help='Print instead of writing')
     args = parser.parse_args()
 
@@ -52,7 +88,8 @@ def main():
 
     os.makedirs('logs', exist_ok=True)
     os.makedirs('scripts', exist_ok=True)
-
+    
+    # TODO: #9 put this in a loop if mode is benchmark, do it once if generate
     script_content = generate_launch_script(args.llm, args.iter)
 
     if args.debug:

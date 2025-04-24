@@ -1,3 +1,15 @@
+# from ollama import Client
+
+# client = Client()
+# response = client.create(
+#   model='gemma3-t2',
+#   from_='gemma3:27b',
+#   system='You are a professional Verification Engineer',
+#   stream=False,
+#   parameters={'num_thread': 8, 'temperature': 0.2}
+# )
+# print(response.status)
+
 from ollama import Client
 
 LLMS = [

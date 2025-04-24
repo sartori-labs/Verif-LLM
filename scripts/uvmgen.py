@@ -1,10 +1,34 @@
 import os
 import re
 import sys
+import time
+import subprocess
 import ollama
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'  # Use the first GPU
+
+def start_ollama_server_and_wait(timeout=30, interval=1):
+    """Start ollama serve if not already running and wait until ready"""
+    try:
+        ollama.list()
+        print("[INFO] Ollama is already running.")
+        return
+    except Exception:
+        print("[INFO] Starting Ollama server...")
+        subprocess.Popen(["ollama", "serve"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    # Poll until it's ready
+    for i in range(timeout):
+        try:
+            ollama.list()
+            print("[INFO] Ollama server is now ready.")
+            return
+        except Exception:
+            print(f"[INFO] Waiting for Ollama... ({i + 1}/{timeout})")
+            time.sleep(interval)
+
+    raise RuntimeError("Ollama server did not start in time. Please run `ollama serve` manually and retry.")
 
 def generate_single_component(llm_model, llm_in, out_file, output_dir):
     try:
@@ -26,6 +50,8 @@ def generate_single_component(llm_model, llm_in, out_file, output_dir):
         print(f"[ERROR] Exception while generating {out_file}: {e}")
 
 def generate_uvm_modules(llm_model, design_name, iteration):
+    start_ollama_server_and_wait()
+
     # Paths
     base_dir = os.path.dirname(os.path.dirname(__file__))
     # input_dir = os.path.join(base_dir, "prompts")
@@ -48,6 +74,8 @@ def generate_uvm_modules(llm_model, design_name, iteration):
     with open(implementation_file, "r") as f:
         implementation = f.read()
 
+    # TODO: #10 put these prompts in a file and read it once
+    # TODO: #11 modify the prompts to get better responses
     transaction_prompt = "Required:\nTransaction class - " + design_name + "_trans - Write a UVM sequence item to represent a transaction. All inputs should be randomized except clk and rst_n. Outputs are just bits.\n\nGive code for transaction.sv only"
     sequence_prompt = "Required:\nSequence class - " + design_name + "_sequence #(" + design_name + "_trans) - Write a UVM sequence that generates multiple randomized transactions in a loop for high functional coverage.\n\nGive code for sequence.sv only"
     driver_prompt = "Required:\nDriver classs - " + design_name + "_driver - Write a UVM driver that takes transactions from the sequencer, assign values to inputs through the virtual interface. Use anlysis port to send transaction to scoreboard.\n\nGive code for driver.sv only"
@@ -68,20 +96,15 @@ def generate_uvm_modules(llm_model, design_name, iteration):
 
     llm_inputs = [design_desc + "\n\n" + prompt for prompt in prompts]
     
-    response = ollama.generate('gemma3:12b', 'Why is the sky blue?')
-    print(response['response'])    
-    
-    print(ollama.ps())
-    
-    # for llm_in# Run in parallel
-    # with ThreadPoolExecutor(max_workers=len(llm_inputs)) as executor:
-    #     futures = [
-    #         # executor.submit(generate_single_component, llm_model, llm_in, out_file, output_dir)
-    #         # for llm_in, out_file in zip(llm_inputs, output_files)
-    #     ]
+    # Run in parallel
+    with ThreadPoolExecutor(max_workers=len(llm_inputs)) as executor:
+        futures = [
+            executor.submit(generate_single_component, llm_model, llm_in, out_file, output_dir)
+            for llm_in, out_file in zip(llm_inputs, output_files)
+        ]
 
-    #     for future in as_completed(futures):
-    #         future.result()
+        for future in as_completed(futures):
+            future.result()
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
