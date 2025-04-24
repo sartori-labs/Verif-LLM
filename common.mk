@@ -33,24 +33,8 @@ EUCLIDE_VSCODE =
 EUCLIDE_BATCH =
 
 # Default value for INCLUDE_PATH
-INCLUDE_PATH = ./testbench
+INCLUDE_PATH = ./tb
 TEST = DEFAULT
-
-# Check for LLM and TRIAL values to set INCLUDE_PATH
-ifeq ($(LLM), Llama3)
-    INCLUDE_PATH = ../../_llama3/t$(TRIAL)/$(TEST_DESIGN)_tb
-	TEST = Llamat$(TRIAL)
-endif
-
-ifeq ($(LLM), Gemini)
-    INCLUDE_PATH = ../../_gemini/t$(TRIAL)/$(TEST_DESIGN)_tb
-	TEST = Geminit$(TRIAL)
-endif
-
-ifeq ($(LLM), GPT4)
-    INCLUDE_PATH = ../../_chatgpt4o/t$(TRIAL)/$(TEST_DESIGN)_tb
-	TEST = GPTt$(TRIAL)
-endif
 
 help: ## lists the self documenting help file commands
 	@echo ''
@@ -78,6 +62,7 @@ build:
 		$(SCRIPT) $(ARGS) $(FILE_LIST) $(OPTS)
 		rm -rf npiLog
 
+# TODO: #14 Ensure that euclide directive work on MSI
 euclide: EUCLIDE_SWITCH = -euclide
 euclide: EUCLIDE_ARGS = -euclide_args \
 		$(EUCLIDE_VSCODE) \
@@ -97,7 +82,6 @@ euclide_report_summary: ## runs the euclide lint report summary
 vcs: ## builds VCS simulation
 		vcs $(EUCLIDE_SWITCH) \
 		-cm line+cond+fsm+branch+assert+tgl -Mupdate +v2k -sverilog -timescale=1ns/10ps \
-		+define+$(TEST) \
 		+incdir+$(UVM_HOME)/src \
 		-full64 \
 		+incdir+$(INCLUDE_PATH) \
@@ -119,25 +103,23 @@ coverage_report: ## runs VCS coverage report
 			-xmlplan \
 			-warn none \
 
+# TODO: #13 Try a better way to grab coverage report from urgReport/dashboard
 coverage_summary: # grabs summary information from a coverage run
 	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="Toggle"]/@value' urgReport/session.xml | awk -F\" '{ print "Toggle " $$2 }' | sed 's/XPath set is empty/Toggle None/g'
 	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="Cond"]/@value' urgReport/session.xml | awk -F\" '{ print "Cond " $$2 }' | sed 's/XPath set is empty/Cond None/g'
 	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="Line"]/@value' urgReport/session.xml | awk -F\" '{ print "Line " $$2 }' | sed 's/XPath set is empty/Line None/g'
 	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="FSM"]/@value' urgReport/session.xml | awk -F\" '{ print "FSM " $$2 }' | sed 's/XPath set is empty/FSM None/g'
 	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="Branch"]/@value' urgReport/session.xml | awk -F\" '{ print "Branch " $$2 }' | sed 's/XPath set is empty/Branch None/g'
-#	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="Assert"]/@value' urgReport/session.xml | awk -F\" '{ print $$2 }' | sed s/XPath set is empty//g
 	@xmllint --xpath '/session/old_coverage/scope[@type="Groups"]/attr[@type="Group Summary"]/@value' urgReport/session.xml | awk -F\" '{ print "CoverGroup " $$2 }' | sed 's/XPath set is empty/CoverGroup None/g'
-	@xmllint --xpath '/session/old_coverage/scope[@name="Statistics"]/scorelist[1]/score[@name="Assert"]/@value' urgReport/session.xml | awk -F\" '{ print "Assert " $$2 }' | sed 's/XPath set is empty/Assert None/g'
 
 clean: clean_build clean_sim clean_euclide
-clean: ## does clean_build, clean_sim and clean_euclide
 
 clean_build: ## cleans the python output
 			rm -rf npiLog
 			rm -rf __pycache__
 
 clean_sim: ## cleans the simulation output
-		rm -rf *.log  csrc *.h simv* *.key *.vpd urgReport DVEfiles coverage *.vcs *.vcd *.vdb output.txt .fsm.sch.verilog.xml simv.daidir vc_hdrs.h vdCov.conf vdCovLog novas.rc ucli.key
+		rm -rf compile.log  csrc *.h simv* *.key *.vpd urgReport DVEfiles coverage *.vcs *.vcd *.vdb output.txt .fsm.sch.verilog.xml simv.daidir vc_hdrs.h vdCov.conf vdCovLog novas.rc ucli.key
 
 clean_euclide: ## cleans the Synopsys Euclide output
 		rm -rf EUAN.list EUELAB.DB compilation_unit_elab.cud ../workspace
