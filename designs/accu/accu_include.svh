@@ -1,5 +1,5 @@
 `include "uvm_macros.svh"
-import uvm_pkg::*;
+// import uvm_pkg::*;
 
 // accu_pkg.sv
 package accu_pkg;

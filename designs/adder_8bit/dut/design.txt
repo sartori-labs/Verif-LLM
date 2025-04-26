@@ -1,6 +1,4 @@
-Please act as a professional verilog designer.
-
-Implement a module of an 8-bit adder with multiple bit-level adders in combinational logic. 
+Verilog DUT has the following
 
 Module name:  
     adder_8bit               

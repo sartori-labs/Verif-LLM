@@ -80,4 +80,8 @@ Auto_problem_report.txt
 .settings
 workspace
 .cproject
-design/workspace/
+
+# Temp files
+workspace/
+scripts/jobfile.sh
+scripts/create_model.bak.py

@@ -1,36 +1,18 @@
 `include "uvm_macros.svh"
-import uvm_pkg::*;
 
-`ifdef DEFAULT
-    `include "./testbench/adder_8bit_pkg.sv"
-`elsif Llamat1
-    `include "../../_llama3/t1/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif Llamat2
-    `include "../../_llama3/t2/adder_8bit_tb/adder_8bit_pkg.sv"  
-`elsif Llamat3
-    `include "../../_llama3/t3/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif Llamat4
-    `include "../../_llama3/t4/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif Llamat5
-    `include "../../_llama3/t5/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif Geminit1
-    `include "../../_gemini/t1/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif Geminit2
-    `include "../../_gemini/t2/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif Geminit3
-    `include "../../_gemini/t3/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif Geminit4
-    `include "../../_gemini/t4/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif Geminit5
-    `include "../../_gemini/t5/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif GPTt1
-    `include "../../_chatgpt4o/t1/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif GPTt2
-    `include "../../_chatgpt4o/t2/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif GPTt3
-    `include "../../_chatgpt4o/t3/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif GPTt4
-    `include "../../_chatgpt4o/t4/adder_8bit_tb/adder_8bit_pkg.sv"
-`elsif GPTt5
-    `include "../../_chatgpt4o/t5/adder_8bit_tb/adder_8bit_pkg.sv"
-`endif
+// adder_8bit_pkg.sv
+package adder_8bit_pkg;
+
+  import uvm_pkg::*;
+  
+  `include "tb/transaction.sv"
+  `include "tb/sequence.sv"
+  `include "tb/sequencer.sv"
+  `include "tb/driver.sv"
+  `include "tb/monitor.sv"
+  `include "tb/agent.sv"
+  `include "tb/scoreboard.sv"
+  `include "tb/environment.sv"
+  `include "tb/test.sv"
+
+endpackage

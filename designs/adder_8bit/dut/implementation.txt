@@ -1,0 +1,2 @@
+Implementation:
+The module utilizes a series of bit-level adders (full adders) to perform the addition operation.
