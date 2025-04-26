@@ -27,19 +27,16 @@ LLMS = [
 base_dir = os.path.dirname(os.path.dirname(__file__))
 DESIGNS = os.listdir(os.path.join(base_dir, "designs"))
 
-print(DESIGNS)
-
-def generate_launch_script(llm, iteration):
-    launch_lines = ["#!/bin/bash\n"]
+def generate_launch_script(llm, iteration, local):
+    
+    # launch_lines = ["#!/bin/bash\n"]
+    launch_lines = [f"# Iteration {iteration}"]
 
     output_files = [
         "transaction.sv", "sequence.sv", "driver.sv", "monitor.sv",
         "agent.sv", "scoreboard.sv", "environment.sv", "test.sv"
     ]
-    # TODO: #15 Add checkpoint after each iteration
-    # while squeue -u $USER | grep -q ' R\| PD'; do
-    #   sleep 10
-    # done
+    
     for design in DESIGNS:
         job_name = f"{design}_{llm}_iter{iteration}"
         out_log = f"logs/{job_name}.out"
@@ -55,37 +52,50 @@ def generate_launch_script(llm, iteration):
             f"&& ({file_check}) "
             f"&& echo 'iter:{iteration} [uvmgen] OK' >> {design_path}/{llm}_status.log "
             f"|| (echo 'iter:{iteration} [uvmgen] FAIL' >> {design_path}/{llm}_status.log && exit 1)"
-            f" && cd {design_path}"
-            f" && (make vcs && echo 'iter:{iteration} [vcs] OK' >> {llm}_status.log || (echo 'iter:{iteration} [vcs] FAIL' >> {llm}_status.log && exit 1))"
-            f" && (make sim && echo 'iter:{iteration} [sim] OK' >> {llm}_status.log || (echo 'iter:{iteration} [sim] FAIL' >> {llm}_status.log && exit 1))"
-            f" && (make coverage_report coverage_summary && echo 'iter:{iteration} [coverage] OK' >> {llm}_status.log || (echo 'iter:{iteration} [coverage] FAIL' >> {llm}_status.log && exit 1))"
-            f" && (make clean && echo 'iter:{iteration} [clean] OK' >> {llm}_status.log || (echo 'iter:{iteration} [clean] FAIL' >> {llm}_status.log && exit 1))"
-            f" && (rm -rf && echo 'iter:{iteration} [cleanup] OK' >> {llm}_status.log || echo 'iter:{iteration} [cleanup] FAIL' >> {llm}_status.log)"
+            f" && cd {design_path} "
+            f"&& set +e "  # don't exit on failure from here
+            f"&& (make vcs && echo 'iter:{iteration} [vcs] OK' >> {llm}_status.log || echo 'iter:{iteration} [vcs] FAIL' >> {llm}_status.log) "
+            f"&& (make sim && echo 'iter:{iteration} [sim] OK' >> {llm}_status.log || echo 'iter:{iteration} [sim] FAIL' >> {llm}_status.log) "
+            f"&& (make coverage_report coverage_summary && echo 'iter:{iteration} [coverage] OK' >> {llm}_status.log || echo 'iter:{iteration} [coverage] FAIL' >> {llm}_status.log) "
+            f"&& make clean_all && echo 'iter:{iteration} [clean] OK' >> {llm}_status.log || echo 'iter:{iteration} [clean] FAIL' >> {llm}_status.log"
         )
-
-        cmd = (
-            f"sbatch "
-            f"--job-name={job_name} "
-            f"--output={out_log} "
-            f"--error={err_log} "
-            f"--partition=msigpu "
-            f"--gres=gpu:a100:1 "
-            f"--cpus-per-task=4 "
-            f"--mem=16G "
-            f"--time=00:30:00 "
-            f"--wrap=\"{wrapped_cmd}\""
-        )
+        
+        if local:
+            cmd = f"( {wrapped_cmd} ) &"
+        else:
+            cmd = (
+                f"sbatch "
+                f"--job-name={job_name} "
+                f"--output={out_log} "
+                f"--error={err_log} "
+                f"--partition=msigpu "
+                f"--gres=gpu:a100:1 "
+                f"--cpus-per-task=4 "
+                f"--mem=16G "
+                f"--time=00:30:00 "
+                f"--wrap=\"{wrapped_cmd}\""
+            )
 
         launch_lines.append(cmd)
+        
+    # Add synchronization checkpoint after each iteration
+    if local:
+        launch_lines.append("wait")
+        launch_lines.append(f"echo \"All local jobs in iteration {iteration} completed.\"\n")
+    else:
+        launch_lines.append("while squeue -u $USER | grep -q ' R\\| PD'; do")
+        launch_lines.append("    sleep 10")
+        launch_lines.append("done\n")
 
     return "\n".join(launch_lines)
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--llm', required=True, help='LLM to run')
-    parser.add_argument('--iter', type=int, required=True, help='Iteration number')
-    
-    # TODO: #8 Add parameter - mode = benchmark, generate
+    # parser.add_argument('--iter', type=int, required=True, help='Iteration number')
+    parser.add_argument('--local', type=int, choices=[0, 1], default=0, help='0=use SLURM, 1=run locally')
+
+    parser.add_argument('--mode', choices=['generate', 'benchmark'], default='generate', help='Execution mode')
     parser.add_argument('--debug', action='store_true', help='Print instead of writing')
     args = parser.parse_args()
 
@@ -95,17 +105,22 @@ def main():
     os.makedirs('logs', exist_ok=True)
     os.makedirs('scripts', exist_ok=True)
     
-    # TODO: #9 put this in a loop if mode is benchmark, do it once if generate
-    script_content = generate_launch_script(args.llm, args.iter)
+    iterations = [1] if args.mode == 'generate' else range(1, 16)
+
+    all_scripts = ["#!/bin/bash\n"]
+    for i in iterations:
+        all_scripts.append(generate_launch_script(args.llm, i, args.local))
+
+    final_script = "\n".join(all_scripts)
 
     if args.debug:
-        print(script_content)
+        print(final_script)
     else:
         path = 'scripts/jobfile.sh'
         with open(path, 'w') as f:
-            f.write(script_content)
+            f.write(final_script)
         os.chmod(path, 0o755)
-        print(f"[INFO] Launch script written to {path} with 30 sbatch commands")
+        print(f"[INFO] Launch script written to {path} with commands")
 
 if __name__ == '__main__':
     main()

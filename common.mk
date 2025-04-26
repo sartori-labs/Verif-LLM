@@ -112,6 +112,9 @@ coverage_summary: # grabs summary information from a coverage run
 	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="Branch"]/@value' urgReport/session.xml | awk -F\" '{ print "Branch " $$2 }' | sed 's/XPath set is empty/Branch None/g'
 	@xmllint --xpath '/session/old_coverage/scope[@type="Groups"]/attr[@type="Group Summary"]/@value' urgReport/session.xml | awk -F\" '{ print "CoverGroup " $$2 }' | sed 's/XPath set is empty/CoverGroup None/g'
 
+clean_all: clean
+		rm -rf tb/*.sv
+
 clean: clean_build clean_sim clean_euclide
 
 clean_build: ## cleans the python output
@@ -119,7 +122,7 @@ clean_build: ## cleans the python output
 			rm -rf __pycache__
 
 clean_sim: ## cleans the simulation output
-		rm -rf compile.log  csrc *.h simv* *.key *.vpd urgReport DVEfiles coverage *.vcs *.vcd *.vdb output.txt .fsm.sch.verilog.xml simv.daidir vc_hdrs.h vdCov.conf vdCovLog novas.rc ucli.key
+		rm -rf compile.log cm.log run.log tr_db.log  csrc *.h simv* *.key *.vpd urgReport DVEfiles coverage *.vcs *.vcd *.vdb output.txt .fsm.sch.verilog.xml simv.daidir vc_hdrs.h vdCov.conf vdCovLog novas.rc ucli.key
 
 clean_euclide: ## cleans the Synopsys Euclide output
 		rm -rf EUAN.list EUELAB.DB compilation_unit_elab.cud ../workspace
