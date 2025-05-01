@@ -47,6 +47,7 @@ def generate_launch_script(llm, iteration, local):
         # Build file existence check string
         file_check = " && ".join([f"test -f {tb_path}/{fname}" for fname in output_files])
         
+        # TODO: #16 set +e is might fail, think of an alternate way to fix clean
         wrapped_cmd = (
             f"python3 scripts/uvmgen.py '{llm}' '{design}' '{iteration}' "
             f"&& ({file_check}) "
@@ -56,7 +57,7 @@ def generate_launch_script(llm, iteration, local):
             f"&& set +e "  # don't exit on failure from here
             f"&& (make vcs && echo 'iter:{iteration} [vcs] OK' >> {llm}_status.log || echo 'iter:{iteration} [vcs] FAIL' >> {llm}_status.log) "
             f"&& (make sim && echo 'iter:{iteration} [sim] OK' >> {llm}_status.log || echo 'iter:{iteration} [sim] FAIL' >> {llm}_status.log) "
-            f"&& (make coverage_report coverage_summary && echo 'iter:{iteration} [coverage] OK' >> {llm}_status.log || echo 'iter:{iteration} [coverage] FAIL' >> {llm}_status.log) "
+            f"&& (make coverage_report && make coverage_summary | tee -a {llm}_status.log && echo 'iter:{iteration} [coverage] OK' >> {llm}_status.log || echo 'iter:{iteration} [coverage] FAIL' >> {llm}_status.log) "
             f"&& make clean_all && echo 'iter:{iteration} [clean] OK' >> {llm}_status.log || echo 'iter:{iteration} [clean] FAIL' >> {llm}_status.log"
         )
         

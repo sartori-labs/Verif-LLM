@@ -94,6 +94,8 @@ vcs: ## builds VCS simulation
 sim: ## runs VCS simulation
 		./simv -cm line+cond+fsm+branch+assert+tgl -l run.log 
 
+coverage: coverage_report coverage_summary
+
 coverage_report: ## runs VCS coverage report
 		urg -full64 \
 			-dir simv.vdb \
@@ -112,6 +114,9 @@ coverage_summary: # grabs summary information from a coverage run
 	@xmllint --xpath '/session/old_coverage/scope[@name="top"]/scope[@name="uut"]/metric[@name="Branch"]/@value' urgReport/session.xml | awk -F\" '{ print "Branch " $$2 }' | sed 's/XPath set is empty/Branch None/g'
 	@xmllint --xpath '/session/old_coverage/scope[@type="Groups"]/attr[@type="Group Summary"]/@value' urgReport/session.xml | awk -F\" '{ print "CoverGroup " $$2 }' | sed 's/XPath set is empty/CoverGroup None/g'
 
+clean_logs:
+		rm -rf ../../logs/*
+		
 clean_all: clean
 		rm -rf tb/*.sv
 
